@@ -1,0 +1,32 @@
+{
+  "name": "@pactima/node",
+  "version": "1.0.0-beta.1",
+  "description": "Pactima API wrapper for Node.js",
+  "author": "Pactima <support@pactima.com> (https://pactima.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pactima/pactima-node.git"
+  },
+  "keywords": [
+    "typescript",
+    "eSignatures",
+    "eNotary",
+    "Pactima",
+    "@pactima/node"
+  ],
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "axios": "^1.6.1",
+    "form-data": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.5",
+    "typescript": "^4.0"
+  }
+}
