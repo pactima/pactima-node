@@ -18,6 +18,6 @@ jobs:
       - name: Push to NPM
         uses: JS-DevTools/npm-publish@v1
         with:
-          package: './dist/package.json'
+          package: './package.json'
           registry: 'https://registry.npmjs.org'
           token: ${{secrets.NPM_TOKEN}}
