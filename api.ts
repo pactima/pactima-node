@@ -625,6 +625,12 @@ export interface ESignatureAdvancedOptions {
    * @memberof ESignatureAdvancedOptions
    */
   inlineWebhook?: InlineWebhook;
+  /**
+   *
+   * @type {Array<ESignatureAdvancedOptionsLiveCeremonyLockEnum>}
+   * @memberof ESignatureAdvancedOptions
+   */
+  liveCeremonyLocks?: Array<ESignatureAdvancedOptionsLiveCeremonyLockEnum>;
 }
 
 /**
@@ -653,6 +659,34 @@ export interface ESignatureAdvancedOptionsExitRedirectUriConfigItem {
 export type ESignatureAdvancedOptionsExitRedirectUriConfigItemParticipantId =
   | ESignatureParticipantTypeEnum
   | string;
+
+/**
+ *
+ * @export
+ * @enum {string}
+ */
+
+export const ESignatureAdvancedOptionsLiveCeremonyLockEnum = {
+  VideoRecording: 'VIDEO_RECORDING',
+  ManageJointSigners: 'MANAGE_JOINT_SIGNERS',
+  Cancel: 'CANCEL',
+  Reschedule: 'RESCHEDULE',
+  LiveEditing: 'LIVE_EDITING',
+  LiveEditingDocuments: 'LIVE_EDITING.DOCUMENTS',
+  LiveEditingParticipants: 'LIVE_EDITING.PARTICIPANTS',
+  AdvancedOptions: 'ADVANCED_OPTIONS',
+  VideoConferencingMode: 'VIDEO_CONFERENCING_MODE',
+  RapidEditing: 'RAPID_EDITING',
+  RapidEditingMoveResize: 'RAPID_EDITING.MOVE_RESIZE',
+  RapidEditingAddRemove: 'RAPID_EDITING.ADD_REMOVE',
+  Annotate: 'ANNOTATE',
+  IdvReset: 'IDV.RESET',
+  KbaReset: 'KBA.RESET',
+  ForceSign: 'FORCE_SIGN',
+} as const;
+
+export type ESignatureAdvancedOptionsLiveCeremonyLockEnum =
+  (typeof ESignatureAdvancedOptionsLiveCeremonyLockEnum)[keyof typeof ESignatureAdvancedOptionsLiveCeremonyLockEnum];
 
 /**
  *
@@ -1196,6 +1230,20 @@ export const ESignaturePackageDownloadFormatEnum = {
 
 export type ESignaturePackageDownloadFormatEnum =
   (typeof ESignaturePackageDownloadFormatEnum)[keyof typeof ESignaturePackageDownloadFormatEnum];
+
+/**
+ *
+ * @export
+ * @enum {string}
+ */
+
+export const ESignaturePackageReuseFormatEnum = {
+  Static: 'STATIC',
+  Dynamic: 'DYNAMIC',
+} as const;
+
+export type ESignaturePackageReuseFormatEnum =
+  (typeof ESignaturePackageReuseFormatEnum)[keyof typeof ESignaturePackageReuseFormatEnum];
 
 /**
  *
@@ -1887,7 +1935,14 @@ export interface ESignaturePackagesRecordingsListResponse {
    * @memberof ESignaturePackagesRecordingsListResponse
    */
   total?: number;
+  /**
+   *
+   * @type {LiveESignatureVideoRecordingProcessingStatusEnum}
+   * @memberof ESignaturePackagesRecordingsListResponse
+   */
+  recordingProcessingStatus?: LiveESignatureVideoRecordingProcessingStatusEnum;
 }
+
 /**
  *
  * @export
@@ -4272,6 +4327,20 @@ export interface InlineWebhook {
 /**
  *
  * @export
+ * @enum {string}
+ */
+
+export const LiveESignatureVideoRecordingProcessingStatusEnum = {
+  InProgress: 'IN_PROGRESS',
+  Completed: 'COMPLETED',
+} as const;
+
+export type LiveESignatureVideoRecordingProcessingStatusEnum =
+  (typeof LiveESignatureVideoRecordingProcessingStatusEnum)[keyof typeof LiveESignatureVideoRecordingProcessingStatusEnum];
+
+/**
+ *
+ * @export
  * @interface LiveESignaturesVideoRecording
  */
 export interface LiveESignaturesVideoRecording {
@@ -4425,6 +4494,12 @@ export interface PackageFolder {
    * @memberof PackageFolder
    */
   children?: PackageFolderChildren;
+  /**
+   *
+   * @type {PackageFolderStatusEnum}
+   * @memberof PackageFolder
+   */
+  status?: PackageFolderStatusEnum;
 }
 
 /**
@@ -4552,6 +4627,7 @@ export interface PackageFolderMember {
 export const PackageFolderMemberAccessEnum = {
   Write: 'WRITE',
   Read: 'READ',
+  Owner: 'OWNER',
 } as const;
 
 export type PackageFolderMemberAccessEnum =
@@ -4570,6 +4646,20 @@ export const PackageFolderMemberTypeEnum = {
 
 export type PackageFolderMemberTypeEnum =
   (typeof PackageFolderMemberTypeEnum)[keyof typeof PackageFolderMemberTypeEnum];
+
+/**
+ *
+ * @export
+ * @enum {string}
+ */
+
+export const PackageFolderStatusEnum = {
+  Archived: 'ARCHIVED',
+  Active: 'ACTIVE',
+} as const;
+
+export type PackageFolderStatusEnum =
+  (typeof PackageFolderStatusEnum)[keyof typeof PackageFolderStatusEnum];
 
 /**
  *
@@ -4712,6 +4802,9 @@ export const SubscriptionPlanFeaturesEnum = {
   StandardESignatures: 'STANDARD_E_SIGNATURES',
   Hsn: 'HSN',
   PackageFolders: 'PACKAGE_FOLDERS',
+  Api: 'API',
+  ApiTeamIntegration: 'API_TEAM_INTEGRATION',
+  ApiTeamWebhooks: 'API_TEAM_WEBHOOKS',
 } as const;
 
 export type SubscriptionPlanFeaturesEnum =
@@ -6357,6 +6450,70 @@ export const PactimaApiAxiosParamCreator = function (
       };
     },
     /**
+     * Amend an eSignature package. The package must be in `COMPLETED` status, and within first 36 hours of completion.
+     * @summary Open a completed eSignature package for amenment.
+     * @param {string} eSignaturePackageId Id of the eSignature package
+     * @param {object} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    eSignaturePackagesActionsOpenForAmendment: async (
+      eSignaturePackageId: string,
+      body?: object,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'eSignaturePackageId' is not null or undefined
+      assertParamExists(
+        'eSignaturePackagesActionsOpenForAmendment',
+        'eSignaturePackageId',
+        eSignaturePackageId,
+      );
+      const localVarPath =
+        `/e-signature-packages/{eSignaturePackageId}/actions/open-for-amendment`.replace(
+          `{${'eSignaturePackageId'}}`,
+          encodeURIComponent(String(eSignaturePackageId)),
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication DefaultAuthentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * Redraft sets the eSignature back to the `DRAFT` status to allow modifications. Signers who have agreed and finalized, will have to re-perform their agreement, however their response are still saved.
      * @summary Redraft the eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
@@ -6495,12 +6652,14 @@ export const PactimaApiAxiosParamCreator = function (
      * @summary Reuse an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
      * @param {string} [owner] ID of the owner of the newly created package. Defaults to owner of the current eSignature package
+     * @param {ESignaturePackageReuseFormatEnum} [format]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     eSignaturePackagesActionsReuse: async (
       eSignaturePackageId: string,
       owner?: string,
+      format?: ESignaturePackageReuseFormatEnum,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'eSignaturePackageId' is not null or undefined
@@ -6540,6 +6699,10 @@ export const PactimaApiAxiosParamCreator = function (
         localVarFormParams.append('owner', owner as any);
       }
 
+      if (format !== undefined) {
+        localVarFormParams.append('format', format as any);
+      }
+
       localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -6562,13 +6725,11 @@ export const PactimaApiAxiosParamCreator = function (
      * Retrieve via file-server to ensure that returns large (i.e. > 6MB)
      * @summary Safely retrieve an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
-     * @param {boolean} [enforcePreventAccessByMaskedRequesterConfig] If true, will enforce the prevent access by masked requester config in the eSignatures advanced options
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     eSignaturePackagesActionsSafeRetrieve: async (
       eSignaturePackageId: string,
-      enforcePreventAccessByMaskedRequesterConfig?: boolean,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'eSignaturePackageId' is not null or undefined
@@ -6596,22 +6757,10 @@ export const PactimaApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-      const localVarFormParams = new ((configuration &&
-        configuration.formDataCtor) ||
-        FormData)();
 
       // authentication DefaultAuthentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-      if (enforcePreventAccessByMaskedRequesterConfig !== undefined) {
-        localVarFormParams.append(
-          'enforcePreventAccessByMaskedRequesterConfig',
-          String(enforcePreventAccessByMaskedRequesterConfig) as any,
-        );
-      }
-
-      localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
       let headersFromBaseOptions =
@@ -6619,10 +6768,8 @@ export const PactimaApiAxiosParamCreator = function (
       localVarRequestOptions.headers = {
         ...localVarHeaderParameter,
         ...headersFromBaseOptions,
-        ...(localVarFormParams as any).getHeaders?.(),
         ...options.headers,
       };
-      localVarRequestOptions.data = localVarFormParams;
 
       return {
         url: toPathString(localVarUrlObj),
@@ -9408,6 +9555,7 @@ export const PactimaApiAxiosParamCreator = function (
      * @param {string} [updatedAtEndDate] Filter packages updated on or before the specified date
      * @param {Array<ESignatureStatusEnum>} [statuses] Filter packages by status
      * @param {Array<string>} [packageFolderIds]
+     * @param {Array<PackageFolderStatusEnum>} [packageFolderStatuses]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -9422,6 +9570,7 @@ export const PactimaApiAxiosParamCreator = function (
       updatedAtEndDate?: string,
       statuses?: Array<ESignatureStatusEnum>,
       packageFolderIds?: Array<string>,
+      packageFolderStatuses?: Array<PackageFolderStatusEnum>,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/e-signature-packages`;
@@ -9489,6 +9638,10 @@ export const PactimaApiAxiosParamCreator = function (
 
       if (packageFolderIds) {
         localVarQueryParameter['packageFolderIds'] = packageFolderIds;
+      }
+
+      if (packageFolderStatuses) {
+        localVarQueryParameter['packageFolderStatuses'] = packageFolderStatuses;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -15219,6 +15372,43 @@ export const PactimaApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
+     * Amend an eSignature package. The package must be in `COMPLETED` status, and within first 36 hours of completion.
+     * @summary Open a completed eSignature package for amenment.
+     * @param {string} eSignaturePackageId Id of the eSignature package
+     * @param {object} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async eSignaturePackagesActionsOpenForAmendment(
+      eSignaturePackageId: string,
+      body?: object,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<ESignaturePackage>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.eSignaturePackagesActionsOpenForAmendment(
+          eSignaturePackageId,
+          body,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          'PactimaApi.eSignaturePackagesActionsOpenForAmendment'
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
      * Redraft sets the eSignature back to the `DRAFT` status to allow modifications. Signers who have agreed and finalized, will have to re-perform their agreement, however their response are still saved.
      * @summary Redraft the eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
@@ -15297,12 +15487,14 @@ export const PactimaApiFp = function (configuration?: Configuration) {
      * @summary Reuse an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
      * @param {string} [owner] ID of the owner of the newly created package. Defaults to owner of the current eSignature package
+     * @param {ESignaturePackageReuseFormatEnum} [format]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async eSignaturePackagesActionsReuse(
       eSignaturePackageId: string,
       owner?: string,
+      format?: ESignaturePackageReuseFormatEnum,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (
@@ -15314,6 +15506,7 @@ export const PactimaApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.eSignaturePackagesActionsReuse(
           eSignaturePackageId,
           owner,
+          format,
           options,
         );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -15333,13 +15526,11 @@ export const PactimaApiFp = function (configuration?: Configuration) {
      * Retrieve via file-server to ensure that returns large (i.e. > 6MB)
      * @summary Safely retrieve an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
-     * @param {boolean} [enforcePreventAccessByMaskedRequesterConfig] If true, will enforce the prevent access by masked requester config in the eSignatures advanced options
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async eSignaturePackagesActionsSafeRetrieve(
       eSignaturePackageId: string,
-      enforcePreventAccessByMaskedRequesterConfig?: boolean,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (
@@ -15350,7 +15541,6 @@ export const PactimaApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.eSignaturePackagesActionsSafeRetrieve(
           eSignaturePackageId,
-          enforcePreventAccessByMaskedRequesterConfig,
           options,
         );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -16897,6 +17087,7 @@ export const PactimaApiFp = function (configuration?: Configuration) {
      * @param {string} [updatedAtEndDate] Filter packages updated on or before the specified date
      * @param {Array<ESignatureStatusEnum>} [statuses] Filter packages by status
      * @param {Array<string>} [packageFolderIds]
+     * @param {Array<PackageFolderStatusEnum>} [packageFolderStatuses]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -16911,6 +17102,7 @@ export const PactimaApiFp = function (configuration?: Configuration) {
       updatedAtEndDate?: string,
       statuses?: Array<ESignatureStatusEnum>,
       packageFolderIds?: Array<string>,
+      packageFolderStatuses?: Array<PackageFolderStatusEnum>,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (
@@ -16930,6 +17122,7 @@ export const PactimaApiFp = function (configuration?: Configuration) {
           updatedAtEndDate,
           statuses,
           packageFolderIds,
+          packageFolderStatuses,
           options,
         );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -20155,6 +20348,27 @@ export const PactimaApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * Amend an eSignature package. The package must be in `COMPLETED` status, and within first 36 hours of completion.
+     * @summary Open a completed eSignature package for amenment.
+     * @param {string} eSignaturePackageId Id of the eSignature package
+     * @param {object} [body]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    eSignaturePackagesActionsOpenForAmendment(
+      eSignaturePackageId: string,
+      body?: object,
+      options?: any,
+    ): AxiosPromise<ESignaturePackage> {
+      return localVarFp
+        .eSignaturePackagesActionsOpenForAmendment(
+          eSignaturePackageId,
+          body,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * Redraft sets the eSignature back to the `DRAFT` status to allow modifications. Signers who have agreed and finalized, will have to re-perform their agreement, however their response are still saved.
      * @summary Redraft the eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
@@ -20197,37 +20411,38 @@ export const PactimaApiFactory = function (
      * @summary Reuse an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
      * @param {string} [owner] ID of the owner of the newly created package. Defaults to owner of the current eSignature package
+     * @param {ESignaturePackageReuseFormatEnum} [format]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     eSignaturePackagesActionsReuse(
       eSignaturePackageId: string,
       owner?: string,
+      format?: ESignaturePackageReuseFormatEnum,
       options?: any,
     ): AxiosPromise<ESignaturePackage> {
       return localVarFp
-        .eSignaturePackagesActionsReuse(eSignaturePackageId, owner, options)
+        .eSignaturePackagesActionsReuse(
+          eSignaturePackageId,
+          owner,
+          format,
+          options,
+        )
         .then((request) => request(axios, basePath));
     },
     /**
      * Retrieve via file-server to ensure that returns large (i.e. > 6MB)
      * @summary Safely retrieve an eSignature package
      * @param {string} eSignaturePackageId Id of the eSignature package
-     * @param {boolean} [enforcePreventAccessByMaskedRequesterConfig] If true, will enforce the prevent access by masked requester config in the eSignatures advanced options
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     eSignaturePackagesActionsSafeRetrieve(
       eSignaturePackageId: string,
-      enforcePreventAccessByMaskedRequesterConfig?: boolean,
       options?: any,
     ): AxiosPromise<ESignaturePackage> {
       return localVarFp
-        .eSignaturePackagesActionsSafeRetrieve(
-          eSignaturePackageId,
-          enforcePreventAccessByMaskedRequesterConfig,
-          options,
-        )
+        .eSignaturePackagesActionsSafeRetrieve(eSignaturePackageId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -21113,6 +21328,7 @@ export const PactimaApiFactory = function (
      * @param {string} [updatedAtEndDate] Filter packages updated on or before the specified date
      * @param {Array<ESignatureStatusEnum>} [statuses] Filter packages by status
      * @param {Array<string>} [packageFolderIds]
+     * @param {Array<PackageFolderStatusEnum>} [packageFolderStatuses]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -21127,6 +21343,7 @@ export const PactimaApiFactory = function (
       updatedAtEndDate?: string,
       statuses?: Array<ESignatureStatusEnum>,
       packageFolderIds?: Array<string>,
+      packageFolderStatuses?: Array<PackageFolderStatusEnum>,
       options?: any,
     ): AxiosPromise<ESignaturePackagesListResponse> {
       return localVarFp
@@ -21141,6 +21358,7 @@ export const PactimaApiFactory = function (
           updatedAtEndDate,
           statuses,
           packageFolderIds,
+          packageFolderStatuses,
           options,
         )
         .then((request) => request(axios, basePath));
@@ -23226,6 +23444,30 @@ export class PactimaApi extends BaseAPI {
   };
 
   /**
+   * Amend an eSignature package. The package must be in `COMPLETED` status, and within first 36 hours of completion.
+   * @summary Open a completed eSignature package for amenment.
+   * @param {string} eSignaturePackageId Id of the eSignature package
+   * @param {object} [body]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof PactimaApi
+   */
+  private _eSignaturePackagesActionsOpenForAmendment = (
+    eSignaturePackageId: string,
+    body?: object,
+    options?: RawAxiosRequestConfig,
+  ) => {
+    return PactimaApiFp(this.configuration)
+      .eSignaturePackagesActionsOpenForAmendment(
+        eSignaturePackageId,
+        body,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath))
+      .then((x) => x.data);
+  };
+
+  /**
    * Redraft sets the eSignature back to the `DRAFT` status to allow modifications. Signers who have agreed and finalized, will have to re-perform their agreement, however their response are still saved.
    * @summary Redraft the eSignature package
    * @param {string} eSignaturePackageId Id of the eSignature package
@@ -23274,18 +23516,24 @@ export class PactimaApi extends BaseAPI {
    * @summary Reuse an eSignature package
    * @param {string} eSignaturePackageId Id of the eSignature package
    * @param {string} [owner] ID of the owner of the newly created package. Defaults to owner of the current eSignature package
+   * @param {ESignaturePackageReuseFormatEnum} [format]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof PactimaApi
    */
   private _eSignaturePackagesActionsReuse = (
     eSignaturePackageId: string,
-    formData: { owner?: string },
+    formData: { owner?: string; format?: ESignaturePackageReuseFormatEnum },
     options?: RawAxiosRequestConfig,
   ) => {
-    const { owner } = formData ?? {};
+    const { owner, format } = formData ?? {};
     return PactimaApiFp(this.configuration)
-      .eSignaturePackagesActionsReuse(eSignaturePackageId, owner, options)
+      .eSignaturePackagesActionsReuse(
+        eSignaturePackageId,
+        owner,
+        format,
+        options,
+      )
       .then((request) => request(this.axios, this.basePath))
       .then((x) => x.data);
   };
@@ -23294,23 +23542,16 @@ export class PactimaApi extends BaseAPI {
    * Retrieve via file-server to ensure that returns large (i.e. > 6MB)
    * @summary Safely retrieve an eSignature package
    * @param {string} eSignaturePackageId Id of the eSignature package
-   * @param {boolean} [enforcePreventAccessByMaskedRequesterConfig] If true, will enforce the prevent access by masked requester config in the eSignatures advanced options
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof PactimaApi
    */
   private _eSignaturePackagesActionsSafeRetrieve = (
     eSignaturePackageId: string,
-    formData: { enforcePreventAccessByMaskedRequesterConfig?: boolean },
     options?: RawAxiosRequestConfig,
   ) => {
-    const { enforcePreventAccessByMaskedRequesterConfig } = formData ?? {};
     return PactimaApiFp(this.configuration)
-      .eSignaturePackagesActionsSafeRetrieve(
-        eSignaturePackageId,
-        enforcePreventAccessByMaskedRequesterConfig,
-        options,
-      )
+      .eSignaturePackagesActionsSafeRetrieve(eSignaturePackageId, options)
       .then((request) => request(this.axios, this.basePath))
       .then((x) => x.data);
   };
@@ -24328,7 +24569,8 @@ export class PactimaApi extends BaseAPI {
                     updatedAtStartDate?: {string}, 
                     updatedAtEndDate?: {string}, 
                     statuses?: {Array<ESignatureStatusEnum>}, 
-                    packageFolderIds?: {Array<string>}
+                    packageFolderIds?: {Array<string>}, 
+                    packageFolderStatuses?: {Array<PackageFolderStatusEnum>}
                          } [params] Query parameters.
             * @param {*} [options] Override http request option.
             * @throws {RequiredError}
@@ -24346,6 +24588,7 @@ export class PactimaApi extends BaseAPI {
       updatedAtEndDate?: string;
       statuses?: Array<ESignatureStatusEnum>;
       packageFolderIds?: Array<string>;
+      packageFolderStatuses?: Array<PackageFolderStatusEnum>;
     },
     options?: RawAxiosRequestConfig,
   ) => {
@@ -24360,6 +24603,7 @@ export class PactimaApi extends BaseAPI {
       updatedAtEndDate,
       statuses,
       packageFolderIds,
+      packageFolderStatuses,
     } = params ?? {};
     return PactimaApiFp(this.configuration)
       .eSignaturePackagesList(
@@ -24373,6 +24617,7 @@ export class PactimaApi extends BaseAPI {
         updatedAtEndDate,
         statuses,
         packageFolderIds,
+        packageFolderStatuses,
         options,
       )
       .then((request) => request(this.axios, this.basePath))
@@ -26301,6 +26546,7 @@ export class PactimaApi extends BaseAPI {
       download: this._eSignaturePackagesActionsDownload,
       downloadAuditTrails: this._eSignaturePackagesActionsDownloadAuditTrails,
       reuse: this._eSignaturePackagesActionsReuse,
+      openForAmendment: this._eSignaturePackagesActionsOpenForAmendment,
       reschedule: this._eSignaturePackagesActionsReschedule,
       modifyAdvancedOptions:
         this._eSignaturePackagesActionsModifyAdvancedOptions,
