@@ -2504,6 +2504,12 @@ export interface ESignatureTemplate {
   description?: string;
   /**
    *
+   * @type {string}
+   * @memberof ESignatureTemplate
+   */
+  emailMessage?: string;
+  /**
+   *
    * @type {Array<ESignatureTemplateDocument>}
    * @memberof ESignatureTemplate
    */
@@ -2878,6 +2884,12 @@ export interface ESignatureTemplatesCreateParams {
    */
   description?: string;
   /**
+   * Template of email message body to be sent to the signers.
+   * @type {string}
+   * @memberof ESignatureTemplatesCreateParams
+   */
+  emailMessage?: string;
+  /**
    * Pactima ID of the owner of the package. Defaults to the id of the requester; when using as Team Integration API Key, the request can specify any team member
    * @type {string}
    * @memberof ESignatureTemplatesCreateParams
@@ -3168,6 +3180,12 @@ export interface ESignatureTemplatesUpdateParams {
    * @memberof ESignatureTemplatesUpdateParams
    */
   description?: string;
+  /**
+   * Body of the email message to be sent to the signers
+   * @type {string}
+   * @memberof ESignatureTemplatesUpdateParams
+   */
+  emailMessage?: string;
   /**
    * Pactima ID of the owner of the package. Defaults to the id of the requester; when using as Team Integration API Key, the request can specify any team member
    * @type {string}
