@@ -1,6 +1,6 @@
 {
   "name": "@pactima/node",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Pactima API wrapper for Node.js",
   "author": "Pactima <support@pactima.com> (https://pactima.com)",
   "repository": {
